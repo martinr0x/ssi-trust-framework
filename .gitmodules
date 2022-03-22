@@ -1,0 +1,6 @@
+[submodule "tem/abd/gnunet"]
+	path = tem/abd/gnunet
+	url = https://git.gnunet.org/git/gnunet.git
+[submodule "tv/opa"]
+	path = tv/opa
+	url = https://github.com/open-policy-agent/opa.git

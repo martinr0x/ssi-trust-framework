@@ -1,0 +1,12 @@
+{
+   "order":{
+      "ageVerificationRequired":false,
+      "orderId":"abfe13f712120431c276e12eca",
+      "productId":"ebfeb1f712ebc6f1c276e12ec21",
+      "quantity":7,
+      "price":{
+         "value":234,
+         "currency":"EUR"
+      }
+   }
+}

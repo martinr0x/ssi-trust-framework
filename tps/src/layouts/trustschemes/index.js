@@ -28,10 +28,22 @@ import DefaultInfoCard from "../../examples/Cards/InfoCards/DefaultInfoCard";
 import MDTypography from "../../components/MDTypography";
 
 import Divider from "@mui/material/Divider";
-import MDButton from "../../components/MDButton";
-import IconButton from "@mui/material/IconButton";
-import { KeyboardArrowDown, PhotoCamera } from "@mui/icons-material";
+import policy from "./policy";
 
+
+const postData = async (url = '', data) => {
+  // Default options are marked with *
+  const response = await fetch(url, {
+    method: 'PUT',
+
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8'
+    },
+
+    body:data
+  });
+
+}
 const getPolicies = (setState) => {
   fetch("/v1/policies").then(res => res.json()).then(res => {
     setState(s => ({ ...s, policies: res.result }));
@@ -39,10 +51,24 @@ const getPolicies = (setState) => {
   });
 };
 
+
+
+const getTrustSchemes = (setState)=> {
+    fetch("/identity").then(res => res.json()).then( res => {
+
+        let ts = res.filter(e => (e.name == "ebf" || e.name == "eutl"));
+        ts = ts[0].name == "ebf"? ts: ts.reverse();
+        setState(s => ({ ...s, trustschemes: ts}));
+        postData("/v1/policies/webshop.rego", policy(ts[0].pubkey, ts[1].pubkey));
+    })}
+
+
 function TrustSchemeInfo({ tem, id, desc }) {
 
 
-  return (
+
+
+    return (
     <>
       <MDBox mt={1}>
         <MDTypography variant="caption" color="text">
@@ -105,8 +131,9 @@ function TrustSchemeInfo({ tem, id, desc }) {
 function TrustScheme() {
 
 
-  const [state, setState] = useState({ total: 0, label: [], datasets: [], avgEvalTime: 0, policies: [] });
+  const [state, setState] = useState({ total: 0, label: [], datasets: [], avgEvalTime: 0, policies: [], trustschemes: [{pubkey:"test"},{pubkey:"test"}] });
   useEffect(() => {
+      getTrustSchemes(setState);
     getPolicies(setState);
     fetch("/logs").then(res => res.json()).then(res => {
       let data = {};
@@ -127,9 +154,11 @@ function TrustScheme() {
 
       console.log({ total: total, labels: timestamps, datasets: data });
     });
+
   }, []);
 
-  return (
+
+    return (
     <DashboardLayout>
       <DashboardNavbar/>
       <MDBox py={3}>
@@ -141,7 +170,7 @@ function TrustScheme() {
                 color="dark"
                 icon="lock"
                 title="European Banking Federation Trust Scheme"
-                description={<TrustSchemeInfo id={"000G0012V5ZV0TQC6MVWGATR7QX54R63FATH6FXPVYAFCKGB8BWWY5BFKR.trusted"}
+                description={<TrustSchemeInfo id={state.trustschemes[0].pubkey+".trusted"}
                                               tem={"ABD"}
                                               desc={"Trust Scheme of 3500 associated Banks in EU and EFTA countries."}/>}
 
@@ -154,7 +183,7 @@ function TrustScheme() {
                 color="dark"
                 icon="lock"
                 title="European Union Trusted List"
-                description={<TrustSchemeInfo id={"000G00773DAFT2QKJZJ1EHGB2V77QN0F7T17TXB2XK92R3W3JKTPEKZN90.trusted"}
+                description={<TrustSchemeInfo id={state.trustschemes[1].pubkey+".trusted"}
                                               tem={"ABD"}
                                               desc={"Trust Scheme of service providers of all member states of the European Union and European " +
                                               "Economic Area which are deemed trusted in accordance with eIDAS regulations."}/>}
@@ -169,5 +198,6 @@ function TrustScheme() {
     </DashboardLayout>
   );
 }
+
 
 export default TrustScheme;

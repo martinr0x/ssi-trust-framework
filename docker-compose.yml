@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+    tps:
+        build: tps/.
+        ports: 
+            - "3000:3000"
+    tv:
+        image: openpolicyagent/opa:latest
+        ports: 
+            - "8181:8181"
+        volumes:
+            - "./example:/data"
+        command: run --server  -s -c /data/config.yaml
+
+    trustdecisionlogs:
+        build: example/log/.
+        ports: 
+            - "9000:9000"
+    abd:
+        image: gnunet
+        ports:
+            - "2086:2086"
+            - "7776:7776"
+        environment:
+            - GNUNET_PORT=2086 
+        privileged: true
+    checkout:
+        build: example/checkout/.
+        ports: 
+            - "3300:3300"
+
+ 
+

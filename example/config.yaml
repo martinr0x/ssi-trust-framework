@@ -1,0 +1,14 @@
+
+services:
+  logger: 
+    url: http://trustdecisionlogs:9000
+
+status:
+  console: true
+
+decision_logs:
+  service: logger
+  reporting:
+    min_delay_seconds: 1
+    max_delay_seconds: 2
+

@@ -1,11 +1,10 @@
-
-#Trust Framework
+# Trust Framework
 A trust framework for self-sovereign identity systems.
 
-##Example
+## Example
 The example scenario showcases the working of the framework against the scenario described in the master's thesis.
 
-##Setup
+## Setup
 
 Get a GNUnet source tarball (or build one using `make dist`) and place it here as `tem/gnunet.tar.gz`.
 
